@@ -1,29 +1,42 @@
+default: &default
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+
 development:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: myapp_development
-  pool:     5
-  username: postgres
-  password: postgres
-  template: template0
+  <<: *default
+  database: db/development.sqlite3
 
 test:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: myapp_test
-  pool:     5
-  username: postgres
-  password: postgres
-  template: template0
+  <<: *default
+  database: db/test.sqlite3
 
 production:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: myapp_production
-  pool:     5
+  <<: *default
+  database: db/production.sqlite3
+
+''' For MySQL
+'''
+
+''' For Postgres SQL
+default: &default
+  adapter: postgres
   username: postgres
   password: postgres
-  template: template0
+  pool: 5
+  host: localhost
+  encoding: unicode
+  timeout: 5000
+
+development:
+  <<: *default
+  database: myapp_development
+
+test:
+  <<: *default
+  database: myapp_test
+
+production:
+  <<: *default
+  database: myapp_production
+'''

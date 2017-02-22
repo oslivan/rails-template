@@ -10,7 +10,7 @@ end
 
 def get_remote(src, dest = nil)
   dest ||= src
-  repo = 'https://raw.github.com/80percent/rails-template/master/files/'
+  repo = 'https://raw.github.com/oslivan/rails-template/master/files/'
   remote_file = repo + src
   remove_file dest
   get(remote_file, dest)
@@ -21,17 +21,17 @@ remove_comment_of_gem
 get_remote('gitignore', '.gitignore')
 
 # postgresql
-say 'Applying postgresql...'
-remove_gem('sqlite3')
-gem 'pg'
+say 'Applying sqlite3...'
+# remove_gem('sqlite3')
+# gem 'pg'
 get_remote('config/database.yml.example')
-gsub_file "config/database.yml.example", /database: myapp_development/, "database: #{app_name}_development"
-gsub_file "config/database.yml.example", /database: myapp_test/, "database: #{app_name}_test"
-gsub_file "config/database.yml.example", /database: myapp_production/, "database: #{app_name}_production"
+gsub_file "config/database.yml.example", /database: db\/myapp_development/, "database: db\/#{app_name}_development"
+gsub_file "config/database.yml.example", /database: db\/myapp_test/, "database: db\/#{app_name}_test"
+gsub_file "config/database.yml.example", /database: db\/myapp_production/, "database: db\/#{app_name}_production"
 get_remote('config/database.yml.example', 'config/database.yml')
-gsub_file "config/database.yml", /database: myapp_development/, "database: #{app_name}_development"
-gsub_file "config/database.yml", /database: myapp_test/, "database: #{app_name}_test"
-gsub_file "config/database.yml", /database: myapp_production/, "database: #{app_name}_production"
+gsub_file "config/database.yml", /database: db\/myapp_development/, "database: db\/#{app_name}_development"
+gsub_file "config/database.yml", /database: db\/myapp_test/, "database: db\/#{app_name}_test"
+gsub_file "config/database.yml", /database: db\/myapp_production/, "database: db\/#{app_name}_production"
 
 # environment variables set
 say 'Applying figaro...'
@@ -58,16 +58,20 @@ after_bundle do
   generate 'simple_form:install', '--bootstrap'
 end
 
-say 'Applying font-awesome & slim & high_voltage...'
+say 'Applying font-awesome & high_voltage...'
 gem 'font-awesome-sass'
-gem 'slim-rails'
+#gem 'slim-rails'
 gem 'high_voltage', :github=>"thoughtbot/high_voltage"
 get_remote('visitors_controller.rb', 'app/controllers/visitors_controller.rb')
-get_remote('index.html.slim', 'app/views/visitors/index.html.slim')
-get_remote('about.html.slim', 'app/views/pages/about.html.slim')
+#get_remote('index.html.slim', 'app/views/visitors/index.html.slim')
+get_remote('index.html.erb', 'app/views/visitors/index.html.erb')
+#get_remote('about.html.slim', 'app/views/pages/about.html.slim')
+get_remote('about.html.erb', 'app/views/pages/about.html.erb')
 remove_file('app/views/layouts/application.html.erb')
-get_remote('application.html.slim', 'app/views/layouts/application.html.slim')
-gsub_file 'app/views/layouts/application.html.slim', /myapp/, "#{app_name}"
+#get_remote('application.html.slim', 'app/views/layouts/application.html.slim')
+get_remote('application.html.erb', 'app/views/layouts/application.html.erb')
+#gsub_file 'app/views/layouts/application.html.slim', /myapp/, "#{app_name}"
+gsub_file 'app/views/layouts/application.html.erb', /myapp/, "#{app_name}"
 
 say 'Applying action cable config...'
 inject_into_file 'config/environments/production.rb', after: "# Mount Action Cable outside main process or domain\n" do <<-EOF
